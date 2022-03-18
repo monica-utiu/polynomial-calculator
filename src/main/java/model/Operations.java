@@ -13,8 +13,8 @@ public class Operations {
             Monom pair = p2.getBody().stream().filter(m->m.getPow()==monom.getPow()).findFirst().orElse(null);
             if(pair!=null)
             {
-                int coef = monom.getCoef() + pair.getCoef();
-                Monom resMonom = new Monom(monom.getPow(),coef);
+                double coef = monom.getCoef() + pair.getCoef();
+                Monom resMonom = new Monom(coef,monom.getPow());
                 res.getBody().add(resMonom);
                 p2.getBody().remove(pair);
             }
@@ -40,14 +40,15 @@ public class Operations {
             Monom pair = p2.getBody().stream().filter(m->m.getPow()==monom.getPow()).findFirst().orElse(null);
             if(pair!=null)
             {
-                int coef = monom.getCoef() - pair.getCoef();
-                Monom resMonom = new Monom(monom.getPow(),coef);
-                res.getBody().add(resMonom);
+                double coef = monom.getCoef() - pair.getCoef();
+                if( coef != 0 ) {
+                    Monom resMonom = new Monom(coef,monom.getPow());
+                    res.getBody().add(resMonom);
+                }
                 p2.getBody().remove(pair);
             }
             else
             {
-                monom.setCoef(-1*monom.getCoef());
                 res.getBody().add(monom);
             }
         }
@@ -70,7 +71,9 @@ public class Operations {
                 Monom resMonom = new Monom(monom1.getCoef()* monom2.getCoef(),monom1.getPow()+ monom2.getPow());
                 Monom pair = res.getBody().stream().filter(m -> m.getPow() == resMonom.getPow()).findFirst().orElse(null);
                 if(pair!=null) {
-                    pair.setCoef(pair.getCoef()+resMonom.getCoef());
+                    if( pair.getCoef() + resMonom.getCoef() != 0)
+                        pair.setCoef(pair.getCoef()+resMonom.getCoef());
+                    else res.getBody().remove(pair);
                 } else {
                     res.getBody().add(resMonom);
                 }
@@ -83,13 +86,11 @@ public class Operations {
     public DivisionRes divide(Polynom p1, Polynom p2) {
         Polynom quotient = new Polynom();
         if(p1.getBody().get(0).getPow() < p2.getBody().get(0).getPow()) {
-            Polynom aux = p1;
-            p1=p2;
-            p2=aux;
+            return null;   // impossible to divide
         }
-        while(p1.getBody().get(0).getPow() >= p2.getBody().get(0).getPow()) {
+        while(!p1.getBody().isEmpty() && (p1.getBody().get(0).getPow() >= p2.getBody().get(0).getPow()) ) {
             int pow = p1.getBody().get(0).getPow() - p2.getBody().get(0).getPow();
-            int coef = p1.getBody().get(0).getCoef() / p2.getBody().get(0).getCoef();
+            double coef = p1.getBody().get(0).getCoef() / p2.getBody().get(0).getCoef();
             Monom monom = new Monom(coef,pow);
             Polynom dev = new Polynom();
             quotient.getBody().add(monom);
@@ -123,6 +124,7 @@ public class Operations {
             } else {
                 resMonom = new Monom(monom.getCoef(),monom.getPow()+1);
             }
+            res.getBody().add(resMonom);
         }
         res = sortPolynom(res);
         return res;
@@ -148,7 +150,7 @@ public class Operations {
             for( Monom monom:p1.getBody() ) {
                 Monom pair = p2.getBody().stream().filter(m -> m.getPow() == monom.getPow()).findFirst().orElse(null);
                 if( pair==null ) {
-                    return true;
+                    return false;
                 } else {
                     if( monom.getCoef() != pair.getCoef() ) {
                         return false;
@@ -158,4 +160,6 @@ public class Operations {
         }
         return true;
     }
+
+
 }

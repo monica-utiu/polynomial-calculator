@@ -4,14 +4,13 @@ import static java.lang.Integer.parseInt;
 
 public class Monom {
     private int pow;
-    private int coef;
+    private double coef;
 
     public Monom() {
-        this.pow = 0;
-        this.coef = 0;
+
     }
 
-    public Monom(int coef, int pow) {
+    public Monom(double coef, int pow) {
         this.pow = pow;
         this.coef = coef;
     }
@@ -24,11 +23,11 @@ public class Monom {
         this.pow = pow;
     }
 
-    public int getCoef() {
+    public double getCoef() {
         return coef;
     }
 
-    public void setCoef(int coef) {
+    public void setCoef(double coef) {
         this.coef = coef;
     }
 
@@ -51,7 +50,8 @@ public class Monom {
 
     public Monom Monom(String s) {
         int i=s.indexOf('X');
-        int coef, pow;
+        double coef;
+        int pow;
         if(i==-1) {
           pow = 0;
           coef = parseInt(s);
@@ -59,7 +59,7 @@ public class Monom {
             coef = (i == 0) ? 0 : parseInt(s.substring(0, i));
             pow = (s.charAt(i + 1) == '^') ? parseInt(s.substring(i + 2)) : 1;
         }
-        return new Monom(pow,coef);
+        return new Monom(coef, pow);
     }
 
     @Override

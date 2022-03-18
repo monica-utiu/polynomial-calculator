@@ -24,4 +24,13 @@ public class DivisionRes {
     public void setRemainder(Polynom remainder) {
         this.remainder = remainder;
     }
+
+    @Override
+    public String toString() {
+        String output="";
+        output+=this.quotient.toString();
+        output+="\n";
+        output+=this.remainder.toString();
+        return output;
+    }
 }
